@@ -157,7 +157,7 @@ def main():
 
     # Navigation bar
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Detection", "Registration"])
+    page = st.sidebar.radio("Go to", ["Detection", "Registration", "Messages"])
 
     # Handle navigation
     if page == "Detection":

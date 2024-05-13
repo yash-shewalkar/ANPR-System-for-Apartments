@@ -35,11 +35,17 @@ def send_email(sender_name, receiver_name, receiver_email, purpose):
     # Email content
     subject = f"Meeting Request from {sender_name}"
     body = f"Dear {receiver_name},\n\n{sender_name} wants to meet you for the following purpose:\n\n{purpose}\n\n" \
-           f"Click the button below to grant access:\n\n"
+           f"Click the button below to grant access or click the Reject button to deny access:\n\n"
+    
+    # Generate URL dynamically based on sender and receiver names
+    grant_access_url = f"http://127.0.0.1:5500/grants.html?sender={sender_name}&receiver={receiver_name}"
+    reject_url = f"http://127.0.0.1:5501/rejectGrants.html?sender={sender_name}&receiver={receiver_name}"  # URL for Reject button
+    
     html_body = f"<p>Dear {receiver_name},</p>" \
                 f"<p>{sender_name} wants to meet you for the following purpose:</p>" \
                 f"<p>{purpose}</p>" \
-               f"<p><a href='https://grant-access-url'><button style='background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;'>Grant Access</button></a></p>"
+               f"<p><a href='{grant_access_url}'><button class='grant-button'>Grant Access</button></a></p>" \
+               f"<p><a href='{reject_url}'><button class='reject-button'>Reject</button></a></p>"
 
     # Create message container
     msg = MIMEMultipart('alternative')
@@ -87,6 +93,33 @@ def main():
                 st.error("Please fill in all fields.")
     else:
         st.write("No owner data found.")
+
+    # Custom CSS for button styling
+    st.markdown("""
+        <style>
+            .grant-button, .reject-button {
+                background-color: #4CAF50;
+                border: none;
+                color: white;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                cursor: pointer; /* Add cursor pointer */
+                transition: background-color 0.3s ease; /* Add transition effect */
+            }
+            .grant-button:hover, .reject-button:hover {
+                background-color: #45a049; /* Change button color on hover */
+            }
+            .grant-button:active, .reject-button:active {
+                background-color: #367d39; /* Change button color on click */
+            }
+            .reject-button {
+                background-color: #f44336; /* Change reject button color */
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
