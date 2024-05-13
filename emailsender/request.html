@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unique Usernames</title>
+
+  <!-- Import Firebase modules as ES modules -->
+  <script type="module">
+    // Import the functions you need from the SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-app.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/9.6.0/firebase-database.js";
+
+    // Your Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyChkpiDuK_Jbcmxj8Rh53Od0QwBd8BxFGI",
+    authDomain: "smartchowkidhar.firebaseapp.com",
+    databaseURL: "https://smartchowkidhar-default-rtdb.firebaseio.com",
+    projectId: "smartchowkidhar",
+    storageBucket: "smartchowkidhar.appspot.com",
+    messagingSenderId: "947490286483",
+    appId: "1:947490286483:web:70be023aff67182a559666",
+    measurementId: "G-C9H5FY5DP8"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const rootRef = ref(database); // Reference to the database root
+
+    const usernameList = document.getElementById('username-list');
+
+    // Retrieve data from Firebase once it's initialized
+    get(rootRef).then((snapshot) => {
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const usernames = new Set(); // Set for unique usernames
+
+        // Iterate through all top-level children
+        for (const key in data) {
+          if (data[key] && data[key].hasOwnProperty('nameofOwner')) {
+            const ownerName = data[key].nameofOwner;
+            const username = `${ownerName.firstname} ${ownerName.lastname}`.trim(); // Combine Fname and Lname
+            usernames.add(username.toLowerCase()); // Add in lowercase for case-insensitivity
+          }
+        }
+
+        // Display unique usernames
+        usernames.forEach(username => {
+          const listItem = document.createElement('li');
+          listItem.textContent = username;
+          usernameList.appendChild(listItem);
+          console.log(username);
+        });
+      } else {
+        console.log("No data available");
+      }
+    }).catch((error) => {
+      console.error("Error retrieving data:", error);
+    });
+  </script>
+</head>
+<body>
+  <h1>Unique Usernames</h1>
+  <ul id="username-list"></ul>
+</body>
+</html>

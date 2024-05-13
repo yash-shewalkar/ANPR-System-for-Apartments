@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grant Access</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      p {
+        color: #666;
+      }
+
+      #grantResult {
+        font-weight: bold;
+        text-align: center;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Grant Access</h1>
+
+      <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-database.js"></script>
+      <script>
+        // Initialize Firebase
+        var firebaseConfig = {
+          apiKey: "AIzaSyAq5Oe1j_wMJVqn0z-yEhQMvFZRlDiU8XE",
+          authDomain: "edi4project.firebaseapp.com",
+          databaseURL: "https://edi4project-default-rtdb.firebaseio.com",
+          projectId: "edi4project",
+          storageBucket: "edi4project.appspot.com",
+          messagingSenderId: "1076558734753",
+          appId: "1:1076558734753:web:a9c250ac6621587c5ed7e0",
+          measurementId: "G-3WLFN8G757",
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        // Reference to GrantsData collection in Firebase database
+        var grantsRef = firebase.database().ref("GrantsData");
+
+        // Function to handle granting access
+        function grantAccess(senderName, receiverName) {
+          // Add data to GrantsData collection
+
+           // Get current date and time
+           var currentDate = new Date().toLocaleDateString();
+          var currentTime = new Date().toLocaleTimeString();
+
+          grantsRef
+            .push({
+              senderName: senderName,
+              receiverName: receiverName,
+              grantStatus: "Granted",
+              date: currentDate,
+              time: currentTime,
+            })
+            .then(() => {
+              console.log("Grant access data added to Firebase database.");
+              // You can add any additional actions here after granting access
+              document.getElementById("grantResult").innerText =
+                "Access granted successfully!";
+            })
+            .catch((error) => {
+              console.error("Error adding grant access data: ", error);
+              document.getElementById("grantResult").innerText =
+                "Error granting access.";
+            });
+        }
+
+        // Call the grantAccess function when the page loads
+        window.onload = function () {
+          // Extract sender and receiver names from URL parameters
+          const urlParams = new URLSearchParams(window.location.search);
+          const senderName = urlParams.get("sender");
+          const receiverName = urlParams.get("receiver");
+          // Call grantAccess function with sender and receiver names
+          grantAccess(senderName, receiverName);
+        };
+      </script>
+
+      <p id="grantResult">Granting access...</p>
+    </div>
+  </body>
+</html>
