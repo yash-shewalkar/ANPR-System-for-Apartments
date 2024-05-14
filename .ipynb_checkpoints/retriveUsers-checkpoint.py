@@ -7,19 +7,19 @@ from firebase import firebase
 # Function to retrieve all owner names and emails from Firebase
 def retrieve_owner_data():
     firebase_config = {
-          "apiKey": "AIzaSyChkpiDuK_Jbcmxj8Rh53Od0QwBd8BxFGI",
-          "authDomain": "smartchowkidhar.firebaseapp.com",
-          "databaseURL": "https://smartchowkidhar-default-rtdb.firebaseio.com",
-          "projectId": "smartchowkidhar",
-          "storageBucket": "smartchowkidhar.appspot.com",
-          "messagingSenderId": "947490286483",
-          "appId": "1:947490286483:web:70be023aff67182a559666",
-          "measurementId": "G-C9H5FY5DP8"
+        "apiKey": "AIzaSyAq5Oe1j_wMJVqn0z-yEhQMvFZRlDiU8XE",
+        "authDomain": "edi4project.firebaseapp.com",
+        "databaseURL": "https://edi4project-default-rtdb.firebaseio.com",
+        "projectId": "edi4project",
+        "storageBucket": "edi4project.appspot.com",
+        "messagingSenderId": "1076558734753",
+        "appId": "1:1076558734753:web:a9c250ac6621587c5ed7e0",
+        "measurementId": "G-3WLFN8G757"
     }
 
     firebase_db = firebase.FirebaseApplication(firebase_config["databaseURL"], None)
 
-    result = firebase_db.get("/SmartChowkidhar/", None)
+    result = firebase_db.get("/OwnersData/", None)
     if result:
         owner_data = {data['nameofOwner']['firstname'] + ' ' + data['nameofOwner']['lastname']: data['email'] for data in result.values()}
         return owner_data

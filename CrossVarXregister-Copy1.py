@@ -198,6 +198,7 @@ def display_access_grants():
 
 
 
+
 def main():
     # Set page title and favicon
     st.set_page_config(page_title="Smart Chowkidhar", page_icon="🚀")
@@ -211,6 +212,7 @@ def main():
         # Header
         st.title("Real-Time Object Detection")
         st.markdown("---")
+        display_entries_from_firebase(firebase_db)
 
         # Sidebar
         st.sidebar.title("Detection Settings")
