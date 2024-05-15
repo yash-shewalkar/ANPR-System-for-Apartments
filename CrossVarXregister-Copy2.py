@@ -6,6 +6,12 @@ import pandas as pd
 import re
 from firebase import firebase
 import datetime
+import os
+
+from dotenv import load_dotenv
+
+# Load environment variables from a specific file path
+load_dotenv(dotenv_path=".gitignorevar.env")
 
 # Function to run the Python script with the provided arguments
 def run_script(model, source):
@@ -88,8 +94,8 @@ def display_detected_text(filename, firebase_db):
     st.header("Detected Text")
     text_container = st.empty()  # Create an empty container for text
     last_detection = ""  # Variable to store the last detected number plate
-    popup_container = None  # Container for pop-up message
-    owner_name_input_key = "owner_name_input"  # Unique key for owner's name input field
+    owner_name_input = st.text_input("Enter owner's name:")
+    status_container = None 
     while True:
         try:
             current_detection = read_last_saved_text(filename)
@@ -97,23 +103,27 @@ def display_detected_text(filename, firebase_db):
                 if current_detection != last_detection:  # Check if a new detection has been made
                     last_detection = current_detection
                     text_container.success(f"Detected Text: {current_detection}")
+                   
                     # Check if the detected text is present in the Firebase database
                     is_present, owner_name = check_number_plate_in_firebase(current_detection, firebase_db)
                     if is_present:
                         text_container.success(f"The number plate '{current_detection}' has registered owner: '{owner_name}'")
-                        if owner_name == "Unknown":
-                            owner_name_input = st.text_input("Enter owner's name:", key=owner_name_input_key)
-                        else:
-                            owner_name_input = None  # Clear input field
-                            st.write("Access Granted!")  # Display access granted message
+                        status = "Access Granted!"
+                        status_color = "green"
+                        save_detected_entry_to_firebase(current_detection, owner_name, True, firebase_db)
                     else:
                         text_container.warning(f"The number plate '{current_detection}' is unregistered!")
-                        owner_name_input = st.text_input("Enter owner's name:", key=owner_name_input_key)
                         if owner_name_input:
                             # Save the detected entry with unknown owner to Firebase
                             save_detected_entry_to_firebase(current_detection, owner_name_input, False, firebase_db)
-                            text_container.success(f"The number plate '{current_detection}' is saved with owner: '{owner_name_input}' as unregistered.")
-                            popup_container = st.error("Access Denied!")  # Display access denied message
+                        status = "Access Denied!"
+                        status_color = "red"
+
+                    # Update access status message
+                    if status_container is not None:
+                        status_container.empty()  # Clear the previous status message
+                    status_container = st.empty()  # Create a new container for the status message
+                    status_container.markdown(f'<p style="color: {status_color};">{status}</p>', unsafe_allow_html=True)
 
             else:
                 text_container.warning("No text detected yet.")
@@ -122,6 +132,7 @@ def display_detected_text(filename, firebase_db):
 
         # Sleep for a short duration to avoid high CPU usage
         time.sleep(1)
+
 
         
 # Function to display registration form
@@ -190,14 +201,14 @@ def display_registration_form(firebase_db):
 def retrieve_access_grants():
     # Firebase configuration
     firebase_config = {
-        "apiKey": "AIzaSyAq5Oe1j_wMJVqn0z-yEhQMvFZRlDiU8XE",
-        "authDomain": "edi4project.firebaseapp.com",
-        "databaseURL": "https://edi4project-default-rtdb.firebaseio.com",
-        "projectId": "edi4project",
-        "storageBucket": "edi4project.appspot.com",
-        "messagingSenderId": "1076558734753",
-        "appId": "1:1076558734753:web:a9c250ac6621587c5ed7e0",
-        "measurementId": "G-3WLFN8G757"
+        "apiKey": os.getenv("FIREBASE_API_KEY"),
+        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+        "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
+        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        "appId": os.getenv("FIREBASE_APP_ID"),
+        "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID")
     }
 
     firebase_db = firebase.FirebaseApplication(firebase_config["databaseURL"], None)
@@ -285,14 +296,14 @@ def display_grants_data(firebase_db):
 def main():
     # Initialize Firebase database
     firebase_config = {
-        "apiKey": "AIzaSyAq5Oe1j_wMJVqn0z-yEhQMvFZRlDiU8XE",
-        "authDomain": "edi4project.firebaseapp.com",
-        "databaseURL": "https://edi4project-default-rtdb.firebaseio.com",
-        "projectId": "edi4project",
-        "storageBucket": "edi4project.appspot.com",
-        "messagingSenderId": "1076558734753",
-        "appId": "1:1076558734753:web:a9c250ac6621587c5ed7e0",
-        "measurementId": "G-3WLFN8G757"
+        "apiKey": os.getenv("FIREBASE_API_KEY"),
+        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+        "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
+        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        "appId": os.getenv("FIREBASE_APP_ID"),
+        "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID")
     }
 
     firebase_db = firebase.FirebaseApplication(firebase_config["databaseURL"], None)
@@ -307,8 +318,8 @@ def main():
     # Handle navigation
     if page == "Detection":
         # Header
-        st.title("Real-Time Object Detection")
-        st.markdown("---")
+        st.title("Welcome to SmarkChowkidar")
+        st.markdown("---")   
         display_entries_from_firebase(firebase_db)
         st.markdown("---")
         display_grants_data(firebase_db)

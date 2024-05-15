@@ -3,18 +3,23 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from firebase import firebase
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from a specific file path
+load_dotenv(dotenv_path=".gitignore/var.env")
 
 # Function to retrieve all owner names and emails from Firebase
 def retrieve_owner_data():
     firebase_config = {
-        "apiKey": "AIzaSyAq5Oe1j_wMJVqn0z-yEhQMvFZRlDiU8XE",
-        "authDomain": "edi4project.firebaseapp.com",
-        "databaseURL": "https://edi4project-default-rtdb.firebaseio.com",
-        "projectId": "edi4project",
-        "storageBucket": "edi4project.appspot.com",
-        "messagingSenderId": "1076558734753",
-        "appId": "1:1076558734753:web:a9c250ac6621587c5ed7e0",
-        "measurementId": "G-3WLFN8G757"
+        "apiKey": os.getenv("FIREBASE_API_KEY"),
+        "authDomain": os.getenv("FIREBASE_AUTH_DOMAIN"),
+        "databaseURL": os.getenv("FIREBASE_DATABASE_URL"),
+        "projectId": os.getenv("FIREBASE_PROJECT_ID"),
+        "storageBucket": os.getenv("FIREBASE_STORAGE_BUCKET"),
+        "messagingSenderId": os.getenv("FIREBASE_MESSAGING_SENDER_ID"),
+        "appId": os.getenv("FIREBASE_APP_ID"),
+        "measurementId": os.getenv("FIREBASE_MEASUREMENT_ID")
     }
 
     firebase_db = firebase.FirebaseApplication(firebase_config["databaseURL"], None)
@@ -29,8 +34,8 @@ def retrieve_owner_data():
 # Function to send email
 def send_email(sender_name, receiver_name, receiver_email, purpose):
     # Gmail configuration
-    gmail_user = 'edi4project.22@gmail.com'  # Enter your Gmail email here
-    gmail_password = 'ywtb oqld mlgi vmhu'     # Enter your Gmail password here
+    gmail_user = os.getenv("GMAIL_ID") # Enter your Gmail email here
+    gmail_password = os.getenv("GMAIL_PSS")     # Enter your Gmail password here
 
     # Email content
     subject = f"Meeting Request from {sender_name}"
