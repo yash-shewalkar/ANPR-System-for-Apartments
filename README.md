@@ -11,3 +11,17 @@ Steps:
 Rest of the files are yet to be sorted as useful and garbage at the end of this project! 
 
 FireBase is used for backend.
+FireBase is used for backend.
+# UI components
+1.Front page view <br><br><br>
+<image src="UI images/page 1.1.png"><br><br><br>
+2.Front page continued<br><br><br>
+<image src="UI images/page 1.2.png"><br><br><br>
+3.Front page detection part<br><br><br>
+<image src="UI images/page 1.31.png"><br><br><br>
+4.Send Email request <br><br><br>
+<image src="UI images/Send Mail.png"><br><br><br>
+5.Recieved Mail format<br><br><br>
+<image src="UI images/Email.png"><br><br><br>
+6.Granted access <br><br><br>
+<image src="UI images/Grant access.png"><br><br><br>
