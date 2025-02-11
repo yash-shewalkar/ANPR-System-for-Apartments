@@ -1,4 +1,7 @@
-# Licence-Plate-Detection-and-Recognition
+# Demo Video
+https://github.com/user-attachments/assets/e7b72cba-4ae5-4171-9190-6ab3e7b76577
+
+nce-Plate-Detection-and-Recognition
 Steps: 
 1. Get_numberPLTfromTxt.ipynb  is the major file for running Streamlit app, run last two lines only 
 2. v2.py contains ANPR model code
